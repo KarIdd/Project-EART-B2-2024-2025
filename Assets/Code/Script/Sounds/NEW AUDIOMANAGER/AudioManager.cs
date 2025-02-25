@@ -99,18 +99,18 @@ public class AudioManager : MonoBehaviour
     /// <param name="choosenSound"></param>
     /// <param name="volume"></param>
     /// <param name="pitch"></param>
-    public void PlaySFXClip(Sounds choosenSound, float volume = 1f, float pitch = 1f)
+    public AudioSource PlaySFXClip(Sounds choosenSound, float volume = 1f, float pitch = 1f)
     {
         if (_clips[(int)choosenSound].ClipList.Count == 0) // cas si l'array n'a pas été remplie correctement
         {
             print("y'a pas de sons là");
-            return;
+            return null;
         }
 
         AudioClip audioClip = _clips[(int)choosenSound].ClipList[Random.Range(0, _clips[(int)choosenSound].ClipList.Count)]; // choisit l'array correcte en fonction de l'enum en paramètre et y choisit un clip au hasard
 
         AudioSource audioSource = UseFromPool();
-        if (audioSource == null) return;
+        if (audioSource == null) return null;
 
         audioSource.clip = audioClip; // assigne le clip random à l'auriosource
         audioSource.volume = volume; // assigne le volume à l'audiosource
@@ -123,6 +123,7 @@ public class AudioManager : MonoBehaviour
         float clipLength = audioSource.clip.length; // détermine la longueur du son
 
         StartCoroutine(HandleSoundEnd(audioSource, clipLength));
+        return audioSource;
     }
 
     /// <summary>
@@ -133,12 +134,12 @@ public class AudioManager : MonoBehaviour
     /// <param name="bypassesEffects"></param>
     /// <param name="volume"></param>
     /// <param name="pitch"></param>
-    public void PlaySFXClipAtPosition(Sounds choosenSound, Vector3 position, bool bypassesEffects = false, float volume = 1f, float pitch = 1f)
+    public AudioSource PlaySFXClipAtPosition(Sounds choosenSound, Vector3 position, bool bypassesEffects = false, float volume = 1f, float pitch = 1f)
     {
         if (_clips[(int)choosenSound].ClipList.Count == 0) // cas si la liste n'a pas été remplie correctement
         {
             print("y'a pas de sons là");
-            return;
+            return null;
         }
 
         AudioClip audioClip = _clips[(int)choosenSound].ClipList[Random.Range(0, _clips[(int)choosenSound].ClipList.Count)]; // choisit la liste correcte en fonction de l'enum en paramètre et y choisit un clip au hasard
@@ -157,6 +158,7 @@ public class AudioManager : MonoBehaviour
         float clipLength = audioSource.clip.length; // détermine la longueur du son
 
         StartCoroutine(HandleSoundEnd(audioSource, clipLength));
+        return audioSource;
     }
 
     /// <summary>

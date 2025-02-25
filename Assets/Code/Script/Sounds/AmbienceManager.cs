@@ -7,7 +7,7 @@ public class AmbienceManager : MonoBehaviour
     [SerializeField] float _sphereSize, _minTime, _maxTime;
     private void Start()
     {
-
+        StartCoroutine(PlayDayAmbience());
     }
 
     
@@ -16,8 +16,8 @@ public class AmbienceManager : MonoBehaviour
     {
         while (true)
         {
-            //yield return new WaitForSeconds(Random.Range(_minTime, _maxTime));
-            //SFXManager.Instance.PlaySFXClip(_dayAmbientEventSounds, SelectRandomSoundSpot(), _dayAmbientEventVolume);
+            yield return new WaitForSeconds(Random.Range(_minTime, _maxTime));
+            AudioSource currentSource = AudioManager.Instance.PlaySFXClipAtPosition(Sounds.Ambience, SelectRandomSoundSpot(),false,1,0.8f);
         }
     }
 
@@ -25,7 +25,6 @@ public class AmbienceManager : MonoBehaviour
     Vector3 SelectRandomSoundSpot()
     {
         Vector3 spot = Random.insideUnitSphere * _sphereSize;
-        Mathf.Abs(spot.y);
         return transform.position + spot;
     }
 

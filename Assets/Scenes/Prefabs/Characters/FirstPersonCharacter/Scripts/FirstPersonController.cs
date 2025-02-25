@@ -180,13 +180,23 @@ namespace UnityStandardAssets.Characters.FirstPerson
             }
             // pick & play a random footstep sound from the array,
             // excluding sound at index 0
-            int n = Random.Range(1, m_FootstepSounds.Length);
-            m_AudioSource.clip = m_FootstepSounds[n];
-            m_AudioSource.PlayOneShot(m_AudioSource.clip);
-            // move picked sound to index 0 so it's not picked next time
-            m_FootstepSounds[n] = m_FootstepSounds[0];
-            m_FootstepSounds[0] = m_AudioSource.clip;
-            m_PlayStep = false;
+
+            RaycastHit hit;
+            Physics.Raycast(transform.position,Vector3.down, out hit);
+
+            switch (hit.collider.gameObject.layer)
+            {
+                case 0 :
+                    AudioManager.Instance.PlaySFXClip(Sounds.GrassStep);
+                    break;
+                case 7 :
+                    AudioManager.Instance.PlaySFXClip(Sounds.WoodStep);
+                    break;
+                case 8 :
+                    AudioManager.Instance.PlaySFXClip(Sounds.RockStep);
+                    break;
+            }
+            
         }
 
 
