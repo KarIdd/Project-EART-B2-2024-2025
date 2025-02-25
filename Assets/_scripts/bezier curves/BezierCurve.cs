@@ -3,7 +3,6 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
-[ExecuteAlways]
 public class BezierCurve : MonoBehaviour
 {
     public int SegmentpointCount = 50;
@@ -24,22 +23,17 @@ public class BezierCurve : MonoBehaviour
     [Range(0, 1)]
     public float testValue;
 
-#if UNITY_EDITOR
-    void Update()
+    private void OnDrawGizmos()
     {
-        Debug.DrawRay(Sample(testValue), Vector3.up * 20, Color.red);
+        Gizmos.color = Color.red;
+        Gizmos.DrawRay(Sample(testValue), Vector3.up * 20);
 
-        if (points.Count >= 2) 
-        Draw();
+        if (points.Count >= 2)
+            Draw();
 
-        testValue = (testValue - 0.1f * Time.deltaTime)%1;
+        testValue = (testValue - 0.1f * Time.deltaTime) % 1;
 
-        if (Application.isPlaying)
-        {
-            GetClosestPoint(PlayerMain.Instance.transform.position);
-        }
     }
-#endif
 
     /// <summary>
     /// utilisé pour calculer un point de la courbe entre deux control points. Les points retournés ne sont pas répartis équitablements par rapport à l'alpha rentrée.
