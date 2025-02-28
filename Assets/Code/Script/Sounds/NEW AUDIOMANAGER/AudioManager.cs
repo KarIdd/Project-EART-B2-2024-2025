@@ -61,6 +61,7 @@ public class AudioManager : MonoBehaviour
     AudioSource CreateSFXObject()
     {
         AudioSource source = Instantiate(_SFXObject);
+        source.transform.parent = transform;
         source.gameObject.SetActive(false);
         AudioPool.Enqueue(source);
         return source;

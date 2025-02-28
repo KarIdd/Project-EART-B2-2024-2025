@@ -26,6 +26,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
         [SerializeField] AudioClip[] m_FootstepSounds;    // an array of footstep sounds that will be randomly selected from.
         [SerializeField] AudioClip m_JumpSound;           // the sound played when character leaves the ground.
         [SerializeField] AudioClip m_LandSound;           // the sound played when character touches back on ground.
+        [SerializeField] float _footstepsPlayRate = .3f;
 
         Camera m_Camera;
         bool m_Jump;
@@ -42,6 +43,9 @@ namespace UnityStandardAssets.Characters.FirstPerson
         bool m_Jumping;
         AudioSource m_AudioSource;
         bool m_PlayStep = false;
+
+
+        float timer;
 
         // Use this for initialization
         void Start()
@@ -109,9 +113,13 @@ namespace UnityStandardAssets.Characters.FirstPerson
             m_MoveDir.x = desiredMove.x * speed;
             m_MoveDir.z = desiredMove.z * speed;
 
-            if (m_Input.x > 0.2f || m_Input.y > 0.2f)
+            timer += Time.deltaTime;
+
+            if (timer >= _footstepsPlayRate && (m_Input.x != 0 || m_Input.y != 0))
             {
                 PlayFootStepAudio(speed);
+                print("play step");
+                timer = 0f;
             }
 
             if (m_CharacterController.isGrounded)
@@ -161,40 +169,45 @@ namespace UnityStandardAssets.Characters.FirstPerson
         }
 
 
-        async void PlayFootStepAudio(float speed)
+        void PlaySteps()
+        {
+
+        }
+
+        void PlayFootStepAudio(float speed)
         {
             if (!m_CharacterController.isGrounded)
             {
                 return;
             }
 
-            if (m_PlayStep) return;
-
-            m_PlayStep = true;
-            await Awaitable.WaitForSecondsAsync(speed == 5 ? 0.4f : 0.25f);
-
-            if (m_Input.x <= 0.2f && m_Input.y <= 0.2f)
-            {
-                m_PlayStep = false;
-                return;
-            }
-            // pick & play a random footstep sound from the array,
-            // excluding sound at index 0
 
             RaycastHit hit;
-            Physics.Raycast(transform.position,Vector3.down, out hit);
+            Physics.Raycast(transform.position,Vector3.down * 10, out hit);
 
-            switch (hit.collider.gameObject.layer)
+            print("step");
+
+            switch (hit.collider.gameObject.tag)
             {
-                case 0 :
+                case "Grass" :
                     AudioManager.Instance.PlaySFXClip(Sounds.GrassStep);
+                    print("grass Step");
                     break;
-                case 7 :
+                case "Wood" :
                     AudioManager.Instance.PlaySFXClip(Sounds.WoodStep);
+                    print("wood Step");
+
                     break;
-                case 8 :
+                case "Rock" :
                     AudioManager.Instance.PlaySFXClip(Sounds.RockStep);
+                    print("Rock Step");
+
                     break;
+                default:
+                    AudioManager.Instance.PlaySFXClip(Sounds.GrassStep);
+                    print("default Step");
+                    break;
+
             }
             
         }

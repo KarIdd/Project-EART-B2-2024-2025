@@ -17,7 +17,8 @@ public class AmbienceManager : MonoBehaviour
         while (true)
         {
             yield return new WaitForSeconds(Random.Range(_minTime, _maxTime));
-            AudioSource currentSource = AudioManager.Instance.PlaySFXClipAtPosition(Sounds.Ambience, SelectRandomSoundSpot(),false,1,0.8f);
+            AudioSource currentSource = AudioManager.Instance.PlaySFXClipAtPosition(Sounds.Ambience, SelectRandomSoundSpot(),false,1,1f);
+            print("ambient sound");
         }
     }
 
